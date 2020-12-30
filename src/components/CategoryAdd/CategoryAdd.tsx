@@ -1,7 +1,8 @@
-import { Form, Input, Button, Card, message } from "antd";
+import { Form, Input, Button, Card, Select, notification } from "antd";
 import { useEffect, useState } from "react";
 import { RouteChildrenProps, useParams, useHistory } from "react-router-dom";
 
+const { Option } = Select;
 
 export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
     const [form] = Form.useForm();
@@ -26,7 +27,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
 
                 setCategoryTree(categoryList)
             });
-    })
+    }, [])
 
     const handleResponse = (response: any) => {
         return response.text().then((text: any) => {
@@ -51,26 +52,49 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
 
 
     const handleSubmit = async (values: any) => {
-        // try {
-        //   setApp({ loading: true });
-        //   if (record.id) {
-        //     await studentService.UPDATE(record.id, values);
-        //     message.success("Record updated");
-        //   } else {
-        //     const {
-        //       data: { id },
-        //     } = await studentService.CREATE(values);
-        //     message.success("Record added");
-        //     history.push(`/student/edit/${id}`);
-        //   }
-        // } catch (err) {
-        //   console.error(err.message);
-        //   message.error("Error while saving the record. Try again, later.");
-        // } finally {
-        //   setApp({ loading: false });
-        // }
-    };
-
+        debugger
+        const category = {
+          ...values
+        };
+        if (!category.path) {
+            Object.assign(category, { path: null })
+        }
+        const requestOptions:any = {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem('token'),
+            "x-refresh-token": localStorage.getItem('ref_token')  
+          },
+          body: JSON.stringify(category),
+        };
+        return fetch(`http://localhost:3000/api/category/`, requestOptions).then(async(data) => {
+          const res = await handleResponse(data);
+          if (res.status === "success") {
+            notification.success({message: 'Create Teacher Account Successfully!'})
+            form.resetFields();
+            const requestOptions: any = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": localStorage.getItem('token'),
+                    "x-refresh-token": localStorage.getItem('ref_token')
+                }
+            };
+    
+            fetch(`http://localhost:3000/api/category/tree`, requestOptions)
+                .then(async (res) => {
+                    const data = await handleResponse(res);
+                    debugger
+                    const categoryList = data.data.rows;
+    
+                    setCategoryTree(categoryList)
+                });
+          } else {
+            notification.error({ message: 'Something was wrong!'})
+          }
+        });
+      };
     return (
         <Card
             type="inner"
@@ -94,7 +118,11 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
                     label="Root"
                     name="path"
                 >
-                    <Input />
+                    <Select placeholder="Please select a parent category" allowClear>
+                        {
+                            categoryTree.map((category:any) => <Option value={category.name}>{category.name}</Option>)
+                        }
+                    </Select>
                 </Form.Item>
 
                 <Form.Item
