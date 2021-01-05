@@ -1,5 +1,6 @@
-import { Col, Row, Select, Divider, notification } from 'antd'
+import { Select, notification } from 'antd'
 import Table from 'antd/es/table';
+import Tag from 'antd/es/tag';
 import React, { Component } from 'react'
 const { Option } = Select;
 
@@ -81,13 +82,28 @@ class StudentList extends Component {
               key: 'email',
             },
             {
+              title: 'Role',
+              dataIndex: 'role',
+              key: 'role',
+              render: (text: any, record: any) => {
+                console.log("=========record.role ==============", record.role);
+                return(
+                <Tag color={ record.role === 0 ? 'red' : record.role === 1 ? 'blue' : 'yellow' }>{record.role === 0 ? 'Student' : record.role === 1 ? 'Teacher' : 'Admin'}</Tag>
+                )
+              }
+            },
+            {
               title: 'Action',
               key: 'action',
-              render: (text : any, record: any) => (
-                <span>
-                  <a onClick={() => this.handleDeleteUser(record)}>Delete</a>
-                </span>
-              ),
+              render: (text : any, record: any) => {
+                return (<div>
+                { record.role !== 2 &&
+                  <span>
+                    <a onClick={() => this.handleDeleteUser(record)}>Delete</a>
+                  </span>
+                }
+                </div>)
+              },
             },
           ];
           

@@ -13,6 +13,7 @@ import { withValid as withValidRouter } from "./utils";
 import StudentList from "./components/StudentList/StudentList";
 import CourseList from "./components/CourseList/CourseList";
 import { CategoryAdd } from "./components/CategoryAdd/CategoryAdd";
+import CategoryList from "./components/CategoryList/CategoryList";
 
 export const AppSwitch = () => {
   const isLoggedIn = useAtomValue(loggedIn);
@@ -68,7 +69,7 @@ export const AppSwitch = () => {
         path="/category/list"
         component={withValidRouter({
           isValid: renderIfLoggedIn,
-          renderIfValid: CourseList,
+          renderIfValid: CategoryList,
         })}
       />
       <Route

@@ -25,43 +25,33 @@ class CategoryList extends Component {
     }
     componentDidMount = () => {
         const requestOptions : any = {
-            method: "POST",
+            method: "GET",
             headers: { "Content-Type": "application/json",
             "x-access-token": localStorage.getItem('token'),
             "x-refresh-token": localStorage.getItem('ref_token') }
           };
         
-        fetch(`http://localhost:3000/api/courses`, requestOptions)
+        fetch(`http://localhost:3000/api/category`, requestOptions)
         .then(async(res) => {
             const data = await this.handleResponse(res);
-            const listCourses = data.data.array;
+            const listCategory = data.data.rows;
             this.setState({
-                data : listCourses
+                data : listCategory
             })
         });
     }
     render() {
         const columns = [
             {
-              title: 'Code',
-              dataIndex: 'code',
-              key: 'code',
-              render: (text:any) => <a>{text}</a>,
-            },
-            {
-              title: 'Teacher',
-              dataIndex: 'owner_name',
-              key: 'owner_name',
-            },
-            {
               title: 'Name',
               dataIndex: 'name',
               key: 'name',
+              render: (text:any) => <a>{text}</a>,
             },
             {
-              title: 'Fee',
-              dataIndex: 'fee',
-              key: 'fee',
+              title: 'Parent',
+              dataIndex: 'path',
+              key: 'path',
             },
             {
               title: 'Action',
@@ -75,7 +65,6 @@ class CategoryList extends Component {
           ];
           
         const data = this.state.data;
-        console.log("========dataa============", data)
         return (
             <>
                <Table 

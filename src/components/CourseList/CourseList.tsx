@@ -75,7 +75,6 @@ class CourseList extends Component {
           ];
           
         const data = this.state.data;
-        console.log("========dataa============", data)
         return (
             <>
                <Table 
