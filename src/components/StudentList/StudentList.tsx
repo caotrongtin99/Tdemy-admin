@@ -1,4 +1,4 @@
-import { Select, notification } from 'antd'
+import { Select, notification, Image } from 'antd'
 import Table from 'antd/es/table';
 import Tag from 'antd/es/tag';
 import React, { Component } from 'react'
@@ -60,6 +60,10 @@ class StudentList extends Component {
                 this.setState({
                     data : newDataSourse
                 })
+                notification.success({
+                  message: 'Success!',
+                  description: 'Delete User Successfully!'
+                })
             } else {
                 notification.error({
                     message: 'Error!'
@@ -77,6 +81,15 @@ class StudentList extends Component {
               render: (text:any) => <a>{text}</a>,
             },
             {
+              title: 'Image',
+              dataIndex: 'avatar_url',
+              key: 'avatar_url',
+              render: (text:any, record:any) => <Image
+              width={100}
+              src={record.avatar_url}
+            />,
+            },
+            {
               title: 'Email',
               dataIndex: 'email',
               key: 'email',
@@ -86,7 +99,6 @@ class StudentList extends Component {
               dataIndex: 'role',
               key: 'role',
               render: (text: any, record: any) => {
-                console.log("=========record.role ==============", record.role);
                 return(
                 <Tag color={ record.role === 0 ? 'red' : record.role === 1 ? 'blue' : 'yellow' }>{record.role === 0 ? 'Student' : record.role === 1 ? 'Teacher' : 'Admin'}</Tag>
                 )

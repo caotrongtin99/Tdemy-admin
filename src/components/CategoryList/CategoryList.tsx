@@ -1,4 +1,4 @@
-import { Col, Row, Select, Divider } from 'antd'
+import { Col, Row, Select, Divider, notification } from 'antd'
 import Table from 'antd/es/table';
 import React, { Component } from 'react'
 const { Option } = Select;
@@ -40,6 +40,36 @@ class CategoryList extends Component {
             })
         });
     }
+
+    deleteCategory = (record:any) => {
+      const requestOptions:any = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json",
+        "x-access-token": localStorage.getItem('token'),
+        "x-refresh-token": localStorage.getItem('ref_token')
+         }
+      };
+    
+      fetch(`http://localhost:3000/api/category/${record.name}`, requestOptions)
+        .then(this.handleResponse)
+        .then((res) => {
+          if (res.status === "Can not delete category has been used!") {
+            notification.error({
+              message: 'Error!',
+              description: 'Can not delete category has been used!'
+            })
+          } else {
+            const newList = this.state.data.filter((category:any) => category.name !== record.name)
+            this.setState({
+              data: newList
+            })
+            notification.success({
+              message: 'Successfully!',
+              description: 'Delete category successfully!'
+            })
+          }
+        });
+    }
     render() {
         const columns = [
             {
@@ -58,7 +88,7 @@ class CategoryList extends Component {
               key: 'action',
               render: (text : any, record: any) => (
                 <span>
-                  <a>Delete</a>
+                  <a onClick={() => this.deleteCategory(record)}>Delete</a>
                 </span>
               ),
             },

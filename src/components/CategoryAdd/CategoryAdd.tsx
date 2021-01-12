@@ -71,7 +71,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
         return fetch(`http://localhost:3000/api/category/`, requestOptions).then(async(data) => {
           const res = await handleResponse(data);
           if (res.status === "success") {
-            notification.success({message: 'Create Teacher Account Successfully!'})
+            notification.success({message: 'Create Category Successfully!'})
             form.resetFields();
             const requestOptions: any = {
                 method: "POST",
