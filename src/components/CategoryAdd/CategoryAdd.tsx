@@ -1,7 +1,8 @@
 import { Form, Input, Button, Card, Select, notification } from "antd";
 import { useEffect, useState } from "react";
 import { RouteChildrenProps, useParams, useHistory } from "react-router-dom";
-
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 const { Option } = Select;
 
 export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
@@ -19,7 +20,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
             }
         };
 
-        fetch(`http://localhost:3000/api/category/tree`, requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
             .then(async (res) => {
                 const data = await handleResponse(res);
                 debugger
@@ -68,7 +69,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
           },
           body: JSON.stringify(category),
         };
-        return fetch(`http://localhost:3000/api/category/`, requestOptions).then(async(data) => {
+        return fetch(`${REACT_APP_API_URL}/api/category/`, requestOptions).then(async(data) => {
           const res = await handleResponse(data);
           if (res.status === "success") {
             notification.success({message: 'Create Category Successfully!'})
@@ -82,7 +83,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
                 }
             };
     
-            fetch(`http://localhost:3000/api/category/tree`, requestOptions)
+            fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
                 .then(async (res) => {
                     const data = await handleResponse(res);
                     debugger

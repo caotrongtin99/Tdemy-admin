@@ -3,6 +3,8 @@ import Table from 'antd/es/table';
 import Tag from 'antd/es/tag';
 import React, { Component } from 'react'
 const { Option } = Select;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 
 class StudentList extends Component {
     state = {
@@ -32,7 +34,7 @@ class StudentList extends Component {
           };
           debugger
         
-        fetch(`http://localhost:3000/api/users`, requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/users`, requestOptions)
         .then(async(res) => {
             const data = await this.handleResponse(res);
             const listUsers = data.data.rows;
@@ -51,7 +53,7 @@ class StudentList extends Component {
             "x-refresh-token": localStorage.getItem('ref_token') }
           };
         
-        fetch(`http://localhost:3000/api/users/${user.id}`, requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/users/${user.id}`, requestOptions)
         .then(async(res) => {
             debugger
             const data = await this.handleResponse(res);
@@ -73,6 +75,7 @@ class StudentList extends Component {
         });
     }
     render() {
+        console.log("==========", process.env)
         const columns = [
             {
               title: 'Name',

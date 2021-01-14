@@ -2,7 +2,7 @@ import { default as axios } from "axios";
 import { ListOpts } from "./index.types";
 
 const origin: string =
-  process.env.REACT_APP_API_ORIGIN || "http://localhost:3000/api";
+  process.env.REACT_APP_API_ORIGIN || "${REACT_APP_API_URL}/api";
 axios.defaults.baseURL = origin;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.put["Content-Type"] = "application/json";

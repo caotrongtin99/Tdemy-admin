@@ -1,14 +1,15 @@
-import { Col, Row, Select, Divider, notification } from 'antd'
+import { Col, Row, Select, Divider, notification, Typography } from 'antd'
 import Table from 'antd/es/table';
 import React, { Component } from 'react'
 const { Option } = Select;
-
+const { Text } = Typography;
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 class CategoryList extends Component {
     state = {
         data: [],
     };
     handleResponse(response: any) {
-        debugger
         return response.text().then((text: any) => {
           const data = text && JSON.parse(text);
           if (!response.ok) {
@@ -31,7 +32,7 @@ class CategoryList extends Component {
             "x-refresh-token": localStorage.getItem('ref_token') }
           };
         
-        fetch(`http://localhost:3000/api/category`, requestOptions)
+        fetch(`${REACT_APP_API_URL}/api/category`, requestOptions)
         .then(async(res) => {
             const data = await this.handleResponse(res);
             const listCategory = data.data.rows;
@@ -50,7 +51,7 @@ class CategoryList extends Component {
          }
       };
     
-      fetch(`http://localhost:3000/api/category/${record.name}`, requestOptions)
+      fetch(`${REACT_APP_API_URL}/api/category/${record.name}`, requestOptions)
         .then(this.handleResponse)
         .then((res) => {
           if (res.status === "Can not delete category has been used!") {
@@ -70,13 +71,59 @@ class CategoryList extends Component {
           }
         });
     }
+
+    onChangeCategory = (text:any, record: any) => {
+      debugger
+      let data;
+      if (!record.path) {
+        data = { name: text, path: null}
+      } else {
+        data = { name: text, path: record.path}
+      }
+      const requestOptions:any = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json",
+        "x-access-token": localStorage.getItem('token'),
+        "x-refresh-token": localStorage.getItem('ref_token')
+         },
+         body: JSON.stringify(data)
+      };
+    
+      fetch(`${REACT_APP_API_URL}/api/category/${record.name}`, requestOptions)
+        .then(this.handleResponse)
+        .then((res) => {
+          if (res.data[0] === 1) {
+            const requestOptions : any = {
+              method: "GET",
+              headers: { "Content-Type": "application/json",
+              "x-access-token": localStorage.getItem('token'),
+              "x-refresh-token": localStorage.getItem('ref_token') }
+            };
+          
+            fetch(`${REACT_APP_API_URL}/api/category`, requestOptions)
+            .then(async(res) => {
+                const data = await this.handleResponse(res);
+                const listCategory = data.data.rows;
+                this.setState({
+                    data : listCategory
+                })
+            });
+            notification.success({ message: 'Success!'})
+          } else {
+            notification.error({
+              message: 'Error!',
+              description: 'Something was wrong!'
+            })
+          }
+        });
+    }
     render() {
         const columns = [
             {
               title: 'Name',
               dataIndex: 'name',
               key: 'name',
-              render: (text:any) => <a>{text}</a>,
+              render: (text:any, record:any) => <Text editable={{ onChange: (e) => this.onChangeCategory(e, record) }}>{text}</Text>,
             },
             {
               title: 'Parent',

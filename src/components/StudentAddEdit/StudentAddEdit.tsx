@@ -1,7 +1,8 @@
 import { Form, Input, Button, Card, message, notification } from "antd";
 import { useEffect } from "react";
 import { RouteChildrenProps, useParams, useHistory } from "react-router-dom";
-
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 
 export const StudentAddEdit: React.FC<RouteChildrenProps> = () => {
   const [form] = Form.useForm();
@@ -24,7 +25,7 @@ export const StudentAddEdit: React.FC<RouteChildrenProps> = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
     };
-    return fetch(`http://localhost:3000/api/users/`, requestOptions).then(async(data) => {
+    return fetch(`${REACT_APP_API_URL}/api/users/`, requestOptions).then(async(data) => {
       const res = await handleResponse(data);
       if (res.status === "success") {
         notification.success({message: 'Create Teacher Account Successfully!'})

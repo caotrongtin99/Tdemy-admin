@@ -2,6 +2,8 @@ import { Row, Image, Modal, Select, notification, Typography, Rate, Tag } from '
 import Table from 'antd/es/table';
 import React, { Component } from 'react'
 import { course } from '../../api-service';
+require('dotenv').config()
+const {REACT_APP_API_URL} = process.env;
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -48,7 +50,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`http://localhost:3000/api/courses?limit=100`, requestOptions)
+    fetch(`${REACT_APP_API_URL}/api/courses?limit=100`, requestOptions)
       .then(async (res) => {
         const data = await this.handleResponse(res);
         const listCourses = data.data.array;
@@ -69,7 +71,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`http://localhost:3000/api/courses/${record.id}`, requestOptions)
+    fetch(`${REACT_APP_API_URL}/api/courses/${record.id}`, requestOptions)
       .then(this.handleResponse)
       .then((res) => {
         debugger
