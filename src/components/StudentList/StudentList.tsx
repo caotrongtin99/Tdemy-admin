@@ -34,7 +34,7 @@ class StudentList extends Component {
           };
           debugger
         
-        fetch(`${REACT_APP_API_URL}/api/users`, requestOptions)
+        fetch(`http://api.fuze.life/api/users`, requestOptions)
         .then(async(res) => {
             const data = await this.handleResponse(res);
             const listUsers = data.data.rows;
@@ -53,7 +53,7 @@ class StudentList extends Component {
             "x-refresh-token": localStorage.getItem('ref_token') }
           };
         
-        fetch(`${REACT_APP_API_URL}/api/users/${user.id}`, requestOptions)
+        fetch(`http://api.fuze.life/api/users/${user.id}`, requestOptions)
         .then(async(res) => {
             debugger
             const data = await this.handleResponse(res);

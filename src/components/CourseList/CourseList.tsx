@@ -1,7 +1,8 @@
-import { Row, Image, Modal, Select, notification, Typography, Rate, Tag } from 'antd'
+import { Row, Image, Modal, Select, notification, Typography, Rate, Tag, Button, Input} from 'antd'
 import Table from 'antd/es/table';
 import React, { Component } from 'react'
-import { course } from '../../api-service';
+import { SearchOutlined } from "@ant-design/icons";
+import Highlighter from 'react-highlight-words';
 require('dotenv').config()
 const {REACT_APP_API_URL} = process.env;
 const { Option } = Select;
@@ -22,8 +23,11 @@ class CourseList extends Component {
       rate: 0,
       owner_name: '',
       short_description: ''
-    }
+    },
+    searchText: '',
+    searchedColumn: '',
   };
+  searchInput:any;
   handleResponse(response: any) {
     debugger
     return response.text().then((text: any) => {
@@ -50,7 +54,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`${REACT_APP_API_URL}/api/courses?limit=100`, requestOptions)
+    fetch(`http://api.fuze.life/api/courses?limit=100`, requestOptions)
       .then(async (res) => {
         const data = await this.handleResponse(res);
         const listCourses = data.data.array;
@@ -71,7 +75,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`${REACT_APP_API_URL}/api/courses/${record.id}`, requestOptions)
+    fetch(`http://api.fuze.life/api/courses/${record.id}`, requestOptions)
       .then(this.handleResponse)
       .then((res) => {
         debugger
@@ -112,6 +116,72 @@ class CourseList extends Component {
     })
   }
 
+  getColumnSearchProps = (dataIndex:any) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters} : any) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered:any) => (
+      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value:any, record:any) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible:any) => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: (text:any) =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  handleSearch = (selectedKeys:any, confirm:any, dataIndex:any) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = (clearFilters: any) => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
   render() {
     const columns = [
       {
@@ -124,6 +194,7 @@ class CourseList extends Component {
         title: 'Teacher',
         dataIndex: 'owner_name',
         key: 'owner_name',
+        ...this.getColumnSearchProps('owner_name')
       },
       {
         title: 'Name',
@@ -147,6 +218,7 @@ class CourseList extends Component {
     ];
 
     const {data, currentCourse} = this.state;
+    const renderData = data.map((item:any) => Object.assign(item, {owner_name : item.teacher.name }))
     return (
       <>
         <Modal title="Course Info" visible={this.state.isVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
@@ -174,7 +246,7 @@ class CourseList extends Component {
           </div>
         </Modal>
         <Table
-          columns={columns} dataSource={data}
+          columns={columns} dataSource={renderData}
         />
       </>
     );

@@ -20,7 +20,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
             }
         };
 
-        fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
+        fetch(`http://api.fuze.life/api/category/tree`, requestOptions)
             .then(async (res) => {
                 const data = await handleResponse(res);
                 debugger
@@ -69,7 +69,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
           },
           body: JSON.stringify(category),
         };
-        return fetch(`${REACT_APP_API_URL}/api/category/`, requestOptions).then(async(data) => {
+        return fetch(`http://api.fuze.life/api/category/`, requestOptions).then(async(data) => {
           const res = await handleResponse(data);
           if (res.status === "success") {
             notification.success({message: 'Create Category Successfully!'})
@@ -83,7 +83,7 @@ export const CategoryAdd: React.FC<RouteChildrenProps> = () => {
                 }
             };
     
-            fetch(`${REACT_APP_API_URL}/api/category/tree`, requestOptions)
+            fetch(`http://api.fuze.life/api/category/tree`, requestOptions)
                 .then(async (res) => {
                     const data = await handleResponse(res);
                     debugger

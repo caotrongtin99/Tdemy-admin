@@ -32,7 +32,7 @@ class CategoryList extends Component {
             "x-refresh-token": localStorage.getItem('ref_token') }
           };
         
-        fetch(`${REACT_APP_API_URL}/api/category`, requestOptions)
+        fetch(`http://api.fuze.life/api/category`, requestOptions)
         .then(async(res) => {
             const data = await this.handleResponse(res);
             const listCategory = data.data.rows;
@@ -51,7 +51,7 @@ class CategoryList extends Component {
          }
       };
     
-      fetch(`${REACT_APP_API_URL}/api/category/${record.name}`, requestOptions)
+      fetch(`http://api.fuze.life/api/category/${record.name}`, requestOptions)
         .then(this.handleResponse)
         .then((res) => {
           if (res.status === "Can not delete category has been used!") {
@@ -89,7 +89,7 @@ class CategoryList extends Component {
          body: JSON.stringify(data)
       };
     
-      fetch(`${REACT_APP_API_URL}/api/category/${record.name}`, requestOptions)
+      fetch(`http://api.fuze.life/api/category/${record.name}`, requestOptions)
         .then(this.handleResponse)
         .then((res) => {
           if (res.data[0] === 1) {
@@ -100,7 +100,7 @@ class CategoryList extends Component {
               "x-refresh-token": localStorage.getItem('ref_token') }
             };
           
-            fetch(`${REACT_APP_API_URL}/api/category`, requestOptions)
+            fetch(`http://api.fuze.life/api/category`, requestOptions)
             .then(async(res) => {
                 const data = await this.handleResponse(res);
                 const listCategory = data.data.rows;

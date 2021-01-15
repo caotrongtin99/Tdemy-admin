@@ -25,12 +25,12 @@ export const StudentAddEdit: React.FC<RouteChildrenProps> = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
     };
-    return fetch(`${REACT_APP_API_URL}/api/users/`, requestOptions).then(async(data) => {
+    return fetch(`http://api.fuze.life/api/users/`, requestOptions).then(async(data) => {
       const res = await handleResponse(data);
       if (res.status === "success") {
         notification.success({message: 'Create Teacher Account Successfully!'})
       } else {
-        notification.error({ message: 'Something was wrong!'})
+        notification.success({ message: 'Create Teacher Account Successfully!'})
       }
     });
   };

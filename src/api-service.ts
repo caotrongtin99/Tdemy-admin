@@ -3,7 +3,7 @@ import { ListOpts } from "./index.types";
 require('dotenv').config()
 const {REACT_APP_API_URL} = process.env;
 const origin: string =
-  process.env.REACT_APP_API_ORIGIN || `${REACT_APP_API_URL}/api`;
+  process.env.REACT_APP_API_ORIGIN || `http://api.fuze.life/api`;
 axios.defaults.baseURL = origin;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.put["Content-Type"] = "application/json";
