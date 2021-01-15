@@ -54,7 +54,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`http://api.fuze.life/api/courses?limit=100`, requestOptions)
+    fetch(`${REACT_APP_API_URL}/api/courses?limit=100`, requestOptions)
       .then(async (res) => {
         const data = await this.handleResponse(res);
         const listCourses = data.data.array;
@@ -75,7 +75,7 @@ class CourseList extends Component {
       }
     };
 
-    fetch(`http://api.fuze.life/api/courses/${record.id}`, requestOptions)
+    fetch(`${REACT_APP_API_URL}/api/courses/${record.id}`, requestOptions)
       .then(this.handleResponse)
       .then((res) => {
         debugger
